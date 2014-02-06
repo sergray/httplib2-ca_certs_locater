@@ -16,7 +16,10 @@
 
 import os
 
-LINUX_PATH = '/etc/ssl/certs/ca-certificates.crt'
+LINUX_PATHS = [
+    '/etc/ssl/certs/ca-certificates.crt',  # on Ubuntu
+    '/etc/pki/tls/certs/ca-bundle.crt',  # on CentOS
+]
 
 
 def get():
@@ -24,8 +27,9 @@ def get():
     """
     # FIXME(dhellmann): Assume Linux for now, add more OSes and
     # platforms later.
-    if os.path.exists(LINUX_PATH):
-        return LINUX_PATH
+    for linux_path in LINUX_PATHS:
+        if os.path.exists(linux_path):
+            return linux_path
     # Fall back to the httplib2 default behavior by raising an
     # ImportError if we have not found the file.
     raise ImportError()
